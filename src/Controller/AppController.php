@@ -12,6 +12,7 @@
  * @since     0.2.9
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace App\Controller;
 
 use App\Model\Table\ProjectsUsersTable;
@@ -51,7 +52,7 @@ class AppController extends Controller
     /**
      * @var
      */
-    public $userID;
+    public $userId;
 
     /**
      * @var
@@ -124,9 +125,9 @@ class AppController extends Controller
             'install',
             'resetPassword',
         ]);
-        $this->userID = $this->Auth->user('id');
+        $this->userId = $this->Auth->user('id');
         $this->baseUrl = Router::url('/', true);
-        $this->loggedInUser = $this->Users->getUserByID($this->userID);
+        $this->loggedInUser = $this->Users->getUserByID($this->userId);
 
         $this->viewBuilder()
             ->layout('application')
@@ -184,24 +185,5 @@ class AppController extends Controller
             $this->Flash->error(_('Sorry, you are not authorised to access this page'));
             $this->redirect($this->referer());
         }
-    }
-
-    /**
-     * @param $projectId
-     * @return array
-     */
-    protected function getProjectOverview($projectId)
-    {
-        $this->loadModel('ProjectsUsers');
-        $this->loadModel('Labels');
-        $overview = [
-            'total_user' => $this->ProjectsUsers->countUserByProjectId($projectId),
-            'total_label' => $this->Labels->countTotalLabelByProjectId($projectId),
-            'total_open_task' => $this->Tasks->countTotalTasksByProjectId($projectId, $status = 1),
-            'total_closed_task' => $this->Tasks->countTotalTasksByProjectId($projectId, $status = [2, 3])
-        ];
-
-        $overview['total_task'] = $overview['total_open_task'] + $overview['total_closed_task'];
-        return $overview;
     }
 }

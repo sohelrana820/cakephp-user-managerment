@@ -203,7 +203,7 @@ class UsersController extends AppController
      */
     public function profile()
     {
-        $profile = $this->Users->get($this->userID, ['contain' => ['Profiles']]);
+        $profile = $this->Users->get($this->userId, ['contain' => ['Profiles']]);
         $this->set(compact('profile'));
         $this->set('_serialize', ['profile']);
     }
@@ -215,7 +215,7 @@ class UsersController extends AppController
      */
     public function updateProfile()
     {
-        $profile = $this->Users->get($this->userID, [
+        $profile = $this->Users->get($this->userId, [
             'contain' => ['Profiles']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -241,7 +241,7 @@ class UsersController extends AppController
      */
     public function changeProfilePassword()
     {
-        $profile = $this->Users->get($this->userID);
+        $profile = $this->Users->get($this->userId);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $profile = $this->Users->patchEntity(
                 $profile,
@@ -269,7 +269,7 @@ class UsersController extends AppController
      */
     public function changeProfilePicture()
     {
-        $isChanged = $this->changeProfilePhoto($this->userID, $this->loggedInUser->uuid);
+        $isChanged = $this->changeProfilePhoto($this->userId, $this->loggedInUser->uuid);
         if ($isChanged) {
             $this->Flash->success(__('Your profile photo has been updated successfully'));
         } else {
@@ -289,7 +289,7 @@ class UsersController extends AppController
         if ($this->request->is('post') && $this->request->params['_ext'] != 'json') {
             $data = $this->request->data;
             $data['uuid'] = Text::uuid();
-            $data['profile']['created_by'] = $this->userID;
+            $data['profile']['created_by'] = $this->userId;
             $verifyCode = substr(Text::uuid(), 0, 32);
             $data['email_verifying_code'] = $verifyCode;
 
@@ -324,7 +324,7 @@ class UsersController extends AppController
 
             $data = $this->request->data;
             $data['uuid'] = Text::uuid();
-            $data['profile']['created_by'] = $this->userID;
+            $data['profile']['created_by'] = $this->userId;
             $entity = $this->Users->newEntity(
                 $data,
                 [
@@ -424,12 +424,12 @@ class UsersController extends AppController
         }
 
         if (!is_numeric($uuid)) {
-            $userID = $this->Users->getIDbyUUID($uuid);
+            $userId = $this->Users->getIDbyUUID($uuid);
         } else {
-            $userID = $uuid;
+            $userId = $uuid;
         }
 
-        $user = $this->Users->get($userID, ['contain' => ['Profiles']]);
+        $user = $this->Users->get($userId, ['contain' => ['Profiles']]);
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
     }
@@ -447,12 +447,12 @@ class UsersController extends AppController
         }
 
         if (!is_numeric($uuid)) {
-            $userID = $this->Users->getIDbyUUID($uuid);
+            $userId = $this->Users->getIDbyUUID($uuid);
         } else {
-            $userID = $uuid;
+            $userId = $uuid;
         }
 
-        $user = $this->Users->get($userID, [
+        $user = $this->Users->get($userId, [
             'contain' => ['Profiles']
         ]);
 
@@ -508,12 +508,12 @@ class UsersController extends AppController
         }
 
         if (!is_numeric($uuid)) {
-            $userID = $this->Users->getIDbyUUID($uuid);
+            $userId = $this->Users->getIDbyUUID($uuid);
         } else {
-            $userID = $uuid;
+            $userId = $uuid;
         }
 
-        $isChanged = $this->changeProfilePhoto($userID, $uuid);
+        $isChanged = $this->changeProfilePhoto($userId, $uuid);
         if ($isChanged) {
             $this->Flash->success(__('Profile photo has been updated successfully'));
         } else {
@@ -534,12 +534,12 @@ class UsersController extends AppController
         }
 
         if (!is_numeric($uuid)) {
-            $userID = $this->Users->getIDbyUUID($uuid);
+            $userId = $this->Users->getIDbyUUID($uuid);
         } else {
-            $userID = $uuid;
+            $userId = $uuid;
         }
 
-        $user = $this->Users->get($userID);
+        $user = $this->Users->get($userId);
         if ($this->Users->delete($user)) {
             $this->Flash->error(__('User has been deleted successfully'));
         } else {
@@ -557,11 +557,11 @@ class UsersController extends AppController
     }
 
     /**
-     * @param $userID
+     * @param $userId
      * @param $uuid
      * @return bool
      */
-    private function changeProfilePhoto($userID, $uuid)
+    private function changeProfilePhoto($userId, $uuid)
     {
         $rootDir = WWW_ROOT . 'img/profiles';
         $path = $rootDir . '/' . $uuid;
@@ -576,7 +576,7 @@ class UsersController extends AppController
             $profileImg['profile']['profile_pic'] = $uuid . '/' . $this->Utilities->uploadProfilePhoto($path, $this->request->data['photo']);
         }
 
-        $user = $this->Users->get($userID, [
+        $user = $this->Users->get($userId, [
             'contain' => ['Profiles']
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
