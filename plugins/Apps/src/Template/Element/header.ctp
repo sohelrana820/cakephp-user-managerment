@@ -35,10 +35,6 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <?php echo $this->Html->link('<i class="fa fa-fw fa-gears"></i> Settings', ['controller' => 'settings', 'action' => 'index'], ['escape' => false]); ?>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
                                 <?php echo $this->Html->link('<i class="fa fa-fw fa-power-off"></i> Log Out', ['controller' => 'users', 'action' => 'logout'], ['escape' => false]); ?>
                             </li>
                         </ul>

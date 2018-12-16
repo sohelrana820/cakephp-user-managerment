@@ -17,9 +17,6 @@
                 </li>
             </ul>
         </li>
-        <li>
-            <?php echo $this->Html->link('<i class="fa fa-gears"></i>  General Settings', ['controller' => 'settings', 'action' => 'general'], ['escape' => false]); ?>
-        </li>
     </ul>
 
     <!-- Copyright area -->
